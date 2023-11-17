@@ -1,16 +1,49 @@
-# This is a sample Python script.
+import sys
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+from PyQt5 import uic
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPainter
+from PyQt5.QtWidgets import QMainWindow, QApplication
+from random import randint
 
 
-# Press the green button in the gutter to run the script.
+class Suprematism(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi('UI.ui', self)
+        self.coords = None
+        self.do_paint = None
+
+        self.init_ui()
+
+    def init_ui(self):
+        self.setWindowTitle('Рисование')
+
+        self.do_paint = False
+        self.coords = (150, 150)
+        self.CircleButton.clicked.connect(self.can_draw)
+
+    def can_draw(self):
+        self.do_paint = True
+        self.repaint()
+
+    def paintEvent(self, event):
+        if self.do_paint:
+            qp = QPainter()
+            qp.begin(self)
+            self.draw_figures(qp)
+        self.do_paint = False
+
+    def draw_figures(self, qp):
+        size = randint(20, 100)
+        x = int(self.coords[0] - size / 2)
+        y = int(self.coords[1] - size / 2)
+        qp.setBrush(Qt.yellow)
+        qp.drawEllipse(x, y, size, size)
+
+
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    app = QApplication(sys.argv)
+    ex = Suprematism()
+    ex.show()
+    sys.exit(app.exec())

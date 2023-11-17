@@ -1,16 +1,16 @@
 import sys
 
-from PyQt5 import uic
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPainter
+from PyQt5.QtGui import QPainter, QColor
 from PyQt5.QtWidgets import QMainWindow, QApplication
 from random import randint
 
+from UI import Ui_MainWindow
 
-class Suprematism(QMainWindow):
+
+class Suprematism(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('UI.ui', self)
+        self.setupUi(self)
         self.coords = None
         self.do_paint = None
 
@@ -38,8 +38,13 @@ class Suprematism(QMainWindow):
         size = randint(20, 100)
         x = int(self.coords[0] - size / 2)
         y = int(self.coords[1] - size / 2)
-        qp.setBrush(Qt.yellow)
+        qp.setBrush(QColor(*self.set_colors()))
         qp.drawEllipse(x, y, size, size)
+
+    @classmethod
+    def set_colors(cls):
+        colors = tuple((randint(0, 255), randint(0, 255), randint(0, 255)))
+        return colors
 
 
 if __name__ == '__main__':
